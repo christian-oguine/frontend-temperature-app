@@ -2,17 +2,30 @@
   <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur border-b border-gray-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
-        <!-- Logo -->
+        <!-- Left: Logo -->
         <NuxtLink to="/" class="flex items-center gap-2 group">
           <Icon name="ph:cloud-sun-duotone" size="26" class="text-primary group-hover:scale-110 transition" />
           <span class="font-semibold text-lg text-textPrimary">TempChecker</span>
         </NuxtLink>
 
-        <!-- Favorites -->
-        <div class="flex items-center gap-2">
+        <!-- Right: Nav + Favorites -->
+        <nav class="flex items-center gap-2">
+          <NuxtLink
+            v-for="item in navItems"
+            :key="item.label"
+            :to="item.to"
+            class="px-3 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-textPrimary hover:bg-gray-100 transition"
+          >
+            <span class="inline-flex items-center gap-2">
+              <Icon :name="item.icon" size="18" />
+              {{ item.label }}
+            </span>
+          </NuxtLink>
+
+          <!-- Favorites button -->
           <button
             type="button"
-            class="relative inline-flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium hover:bg-gray-50 active:scale-[0.99] transition"
+            class="relative ml-2 inline-flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium hover:bg-gray-50 active:scale-[0.99] transition"
             @click="onFavoritesClick"
             aria-label="Open favorites"
           >
@@ -24,7 +37,7 @@
               {{ favoritesCount }}
             </span>
           </button>
-        </div>
+        </nav>
       </div>
     </div>
   </header>
@@ -32,6 +45,12 @@
 
 <script setup lang="ts">
 const favoritesCount = ref(3) // demo data
+
+const navItems = [
+  { label: 'Dashboard', to: '/', icon: 'ph:speedometer-duotone' },
+  { label: 'History', to: '/', icon: 'ph:clock-counter-clockwise-duotone' }
+]
+
 function onFavoritesClick() {
   alert('Open Favorites (demo)')
 }
