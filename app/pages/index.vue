@@ -1,19 +1,38 @@
 <template>
-    <div class="font-sora">
-        <h1 class="text-3xl font-bold mt-8">
-            Welcome to the Temperature App
-        </h1>
-        <p class="mt-4">
-            This application displays current temperature data for various locations.
-        </p>
+  <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur border-b border-gray-200">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <!-- Logo -->
+        <NuxtLink to="/" class="flex items-center gap-2 group">
+          <Icon name="ph:cloud-sun-duotone" size="26" class="text-primary group-hover:scale-110 transition" />
+          <span class="font-semibold text-lg text-textPrimary">TempChecker</span>
+        </NuxtLink>
+
+        <!-- Favorites -->
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="relative inline-flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium hover:bg-gray-50 active:scale-[0.99] transition"
+            @click="onFavoritesClick"
+            aria-label="Open favorites"
+          >
+            <Icon name="ph:heart-duotone" size="18" class="text-rose-500" />
+            <span>Favorites</span>
+            <span
+              class="absolute -right-1.5 -top-1.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-rose-500 px-1 text-xs font-bold text-white shadow"
+            >
+              {{ favoritesCount }}
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
+  </header>
 </template>
 
 <script setup lang="ts">
+const favoritesCount = ref(3) // demo data
+function onFavoritesClick() {
+  alert('Open Favorites (demo)')
+}
 </script>
-
-<style scoped>
-
-</style>
-
-
