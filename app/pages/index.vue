@@ -191,8 +191,23 @@
 import { ref } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 
+const unit = ref<'metric' | 'imperial'>('imperial')
+
+const {data, error} = await useFetch ("http://localhost:5000/api/weather", {
+    method: "GET",
+    query: {
+        city: "Brugge",
+        unit: unit.value
+    }
+});
+
+onMounted(() => {
+    console.log(data.value)
+    console.log(error.value)
+});
+
+
 // UI-only state. All displayed numbers are hardcoded in the template.
-const unit = ref<'C' | 'F'>('C')
 const faved = ref(false)
 const tab = ref<'overview' | 'wind' | 'atmo'>('overview')
 </script>
