@@ -138,7 +138,7 @@ All API calls are made through `/utils/api.ts`:
 
 ```ts
 // utils/api.ts
-export const API_BASE_URL = process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:5000/api'
+export const API_BASE_URL = 'http://localhost:5000/api'
 
 export async function getWeather(city: string, unit: 'metric' | 'imperial') {
   return await $fetch(`${API_BASE_URL}/weather`, { query: { city, unit } })
@@ -152,23 +152,7 @@ import { getWeather } from '~/utils/api'
 const res = await getWeather(city, unit.value)
 ```
 
----
 
-
-Create a branch for API abstraction:
-
-```bash
-git checkout -b feature/api-abstraction
-```
-
-Commit changes:
-```bash
-git add .
-git commit -m "refactor: abstract weather API to utils/api.ts"
-git push -u origin feature/api-abstraction
-```
-
----
 
 ## Troubleshooting
 
@@ -181,7 +165,7 @@ git push -u origin feature/api-abstraction
 
 ---
 
-## 🧑‍💻 Author
+## Author
 
 **Christian Oguine**  
 [GitHub Profile](https://github.com/christian-oguine)
