@@ -14,19 +14,24 @@
         </div>
 
         <!-- Search -->
-        <div class="mx-auto grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-3 bg-white border border-gray-200 rounded-2xl p-3 shadow-sm">
+        <div
+          class="mx-auto grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-3 bg-white border border-gray-200 rounded-2xl p-3 shadow-sm">
           <div class="relative">
-            <Icon name="ph:map-pin-duotone" size="20" class="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" />
+            <Icon name="ph:map-pin-duotone" size="20"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" />
             <input
-              v-model="city"
+              v-model="cityInput"
               type="text"
               class="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-3 py-3 text-sm focus:outline-none"
               placeholder="Ghent"
-              
+              @keyup.enter="fetchWeather"
             />
           </div>
-          <button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-5 py-3 text-sm font-medium"
-                  @click="refresh()">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-5 py-3 text-sm font-medium"
+            @click="fetchWeather"
+          >
             <Icon name="ph:magnifying-glass-duotone" size="18" />
             Search
           </button>
@@ -36,33 +41,34 @@
         <section class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
           <!-- Header row -->
           <div class="flex items-start justify-between gap-4">
-            <!-- Left: location block -->
+            <!-- location block -->
             <div class="min-w-0">
               <div class="flex items-center gap-2">
                 <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
                 <h2 class="text-lg sm:text-xl font-semibold text-textPrimary truncate">
                   {{ data?.city || '—' }}
                 </h2>
-                <span class="text-textSecondary text-xs sm:text-sm inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-gray-200">
+                <span
+                  class="text-textSecondary text-xs sm:text-sm inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-gray-200">
                   {{ data?.country || '—' }}
                 </span>
               </div>
-              <!-- coordinates + tz -->
+              <!-- coordinates -->
               <div class="mt-1 flex items-center gap-2 text-xs sm:text-sm text-textSecondary">
                 <Icon name="ph:map-trifold-duotone" size="14" class="opacity-70" />
-                <span>{{ data?.coordinates?.lat }}, {{ data?.coordinates?.lon }}</span>
+                <span>{{ data?.coordinates?.lat ?? '—' }}, {{ data?.coordinates?.lon ?? '—' }}</span>
               </div>
             </div>
 
-            <!-- Right: unit toggle + fav + icon -->
+            <!-- unit toggle + fav + icon -->
             <div class="flex items-center gap-2">
               <div class="rounded-xl border border-gray-200 overflow-hidden flex">
                 <button type="button" class="px-3 py-1 text-sm"
                         :class="unit==='metric' ? 'bg-primary text-white' : 'text-textSecondary'"
-                        @click="unit='metric'">°C</button>
+                        @click="setUnit('metric')">°C</button>
                 <button type="button" class="px-3 py-1 text-sm"
                         :class="unit==='imperial' ? 'bg-primary text-white' : 'text-textSecondary'"
-                        @click="unit='imperial'">°F</button>
+                        @click="setUnit('imperial')">°F</button>
               </div>
 
               <button type="button"
@@ -99,9 +105,15 @@
           <!-- Tabs -->
           <div class="mt-6">
             <div class="inline-flex rounded-xl border border-gray-200 overflow-hidden">
-              <button class="px-4 py-2 text-sm" :class="tab==='overview' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'" @click="tab='overview'">Overview</button>
-              <button class="px-4 py-2 text-sm" :class="tab==='wind' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'" @click="tab='wind'">Wind</button>
-              <button class="px-4 py-2 text-sm" :class="tab==='atmo' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'" @click="tab='atmo'">Atmosphere</button>
+              <button class="px-4 py-2 text-sm"
+                      :class="tab==='overview' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'"
+                      @click="tab='overview'">Overview</button>
+              <button class="px-4 py-2 text-sm"
+                      :class="tab==='wind' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'"
+                      @click="tab='wind'">Wind</button>
+              <button class="px-4 py-2 text-sm"
+                      :class="tab==='atmo' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'"
+                      @click="tab='atmo'">Atmosphere</button>
             </div>
 
             <!-- OVERVIEW -->
@@ -175,7 +187,9 @@
           </div>
 
           <p v-if="pending" class="mt-4 text-sm text-textSecondary">Loading…</p>
-          <p v-if="error" class="mt-4 text-sm text-red-600">Error: {{ error.message }}</p>
+          <p v-if="error" class="mt-4 text-sm text-red-600">
+            Error: {{ error?.statusMessage || error?.message || 'Request failed' }}
+          </p>
         </section>
       </div>
     </main>
@@ -186,24 +200,43 @@
 import { ref, computed, onMounted } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 
-const city = ref('Ghent')
-const unit = ref<'metric' | 'imperial'>('imperial')
+/** UI state */
+const cityInput = ref('Ghent')                               
+const unit = ref<'metric' | 'imperial'>('metric')
 const faved = ref(false)
 const tab = ref<'overview' | 'wind' | 'atmo'>('overview')
 
-const { data, error, pending, refresh } = useFetch('http://localhost:5000/api/weather', {
-
-  query: { city, unit },          
-  watch: [city, unit],           
-})
+/** Data state */
+const data = ref<any>(null)
+const error = ref<any>(null)
+const pending = ref(false)
 
 const unitLabel = computed(() => (unit.value === 'metric' ? 'C' : 'F'))
-function fmt(n: unknown) {
-  return typeof n === 'number' ? n.toFixed(1) : '—'
+const fmt = (n: unknown) => (typeof n === 'number' ? n.toFixed(1) : '—')
+
+
+async function fetchWeather() {
+  const city = (cityInput.value || '').trim() || 'Ghent'     
+  pending.value = true
+  error.value = null
+  try {
+    data.value = await $fetch('http://localhost:5000/api/weather', {
+      query: { city, unit: unit.value }
+    })
+  } catch (e: any) {
+    error.value = e
+    data.value = null
+  } finally {
+    pending.value = false
+  }
 }
 
-onMounted(() => {
-  console.log('weather data:', data.value)
-  console.log('fetch error:', error.value)
-})
+/** Change unit and refetch for current city */
+async function setUnit(newUnit: 'metric' | 'imperial') {
+  if (unit.value === newUnit) return
+  unit.value = newUnit
+  await fetchWeather()
+}
+
+onMounted(fetchWeather)
 </script>
