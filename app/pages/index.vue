@@ -19,7 +19,7 @@
             <Icon name="ph:map-pin-duotone" size="20" class="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" />
             <input
               type="text"
-              value="Ghent"
+              v-model="city"
               
               class="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-3 py-3 text-sm focus:outline-none"
             />
@@ -38,9 +38,9 @@
             <div class="min-w-0">
               <div class="flex items-center gap-2">
                 <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
-                <h2 class="text-lg sm:text-xl font-semibold text-textPrimary truncate">Ghent</h2>
+                <h2 class="text-lg sm:text-xl font-semibold text-textPrimary truncate">{{ data?.city }}</h2>
                 <span class="text-textSecondary text-xs sm:text-sm inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-gray-200">
-                  BE
+                  {{ data?.country }}
                 </span>
               </div>
               <!-- coordinates + tz as a subtle second line -->
@@ -196,7 +196,7 @@ const unit = ref<'metric' | 'imperial'>('imperial')
 const {data, error} = await useFetch ("http://localhost:5000/api/weather", {
     method: "GET",
     query: {
-        city: "Brugge",
+        city: "Ghent",
         unit: unit.value
     }
 });
