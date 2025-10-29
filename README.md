@@ -11,7 +11,7 @@ It allows users to:
 
 ---
 
-## 🚀 Features
+## Features
 
 | Feature | Description |
 |----------|-------------|
