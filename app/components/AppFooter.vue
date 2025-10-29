@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white border-t border-gray-200">
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-textSecondary">
-        <div>© 2025 Temperature App</div>
+  <div>&copy; {{ year }} Temperature Checker App</div>
         <div class="flex items-center gap-4">
           <NuxtLink to="/" class="hover:underline">Home</NuxtLink>
           <NuxtLink to="/favorites" class="hover:underline">Favorites</NuxtLink>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-
+const year = new Date().getFullYear()
 </script>
 
 <style scoped>
