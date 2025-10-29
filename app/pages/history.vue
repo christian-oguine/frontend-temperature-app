@@ -62,6 +62,8 @@
       </ul>
     </main>
   </div>
+<AppFooter />
+
 </template>
 
 <script setup lang="ts">

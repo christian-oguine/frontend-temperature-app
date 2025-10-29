@@ -210,7 +210,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useFavoritesStore } from '../../stores/favorites'
-import { useHistoryStore } from '../../stores/history'   // ✅ added
+import { useHistoryStore } from '../../stores/history'
+import { getWeather } from '~~/utils/api'   // ✅ Correct import path
 import AppHeader from '~/components/AppHeader.vue'
 import AppFooter from '~/components/AppFooter.vue'
 
@@ -226,7 +227,7 @@ const pending = ref(false)
 
 /** Stores */
 const fav = useFavoritesStore()
-const history = useHistoryStore() // ✅ added
+const history = useHistoryStore()
 
 /** Display helpers */
 const unitLabel = computed(() => (unit.value === 'metric' ? 'C' : 'F'))
@@ -237,15 +238,15 @@ async function fetchWeather() {
   const city = (cityInput.value || '').trim() || 'Ghent'
   pending.value = true
   error.value = null
-  try {
-    const res = await $fetch('http://localhost:5000/api/weather', {
-      query: { city, unit: unit.value }
-    })
 
-    // ✅ Set the response data
+  try {
+    // ✅ Call abstracted API function
+    const res = await getWeather(city, unit.value)
+
+    // ✅ Save API result
     data.value = res
 
-    // ✅ Add current search to history
+    // ✅ Add to history
     history.add({
       city: res.city,
       country: res.country,
@@ -289,7 +290,7 @@ function toggleFavorite() {
 /** Init */
 onMounted(() => {
   fav.load()
-  history.load()     // ✅ ensure previously saved searches are loaded
+  history.load()
   fetchWeather()
 })
 </script>
