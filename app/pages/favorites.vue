@@ -1,97 +1,132 @@
 <template>
-  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+  <div class="min-h-screen bg-background">
     <AppHeader />
 
-    <div class="mt-6 flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-semibold flex items-center gap-3">
-          <span class="inline-flex items-center justify-center h-10 w-10 rounded-lg bg-rose-50 text-rose-600">
-            <Icon name="ph:heart-duotone" size="20" />
-          </span>
-          <span>Favorites</span>
-        </h1>
-        <p class="text-textSecondary mt-1">Saved locations for quick access</p>
-      </div>
+    <main class="min-h-[calc(100vh-4rem)]">
+      <!-- Center, same width as index -->
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Title row -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <Icon name="ph:heart-duotone" size="20" class="text-rose-600" />
+            <h1 class="text-2xl font-semibold text-textPrimary">Favorites</h1>
+            <span class="text-xs text-textSecondary border border-gray-200 rounded-md px-2 py-0.5">
+              {{ filtered.length }} item(s)
+            </span>
+          </div>
 
-      <div class="flex items-center gap-3">
-        <p class="text-sm text-textSecondary">{{ list.length }} saved</p>
-        <button
-          v-if="list.length"
-          @click="clearAll"
-          class="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-lg text-sm hover:shadow"
-        >
-          <Icon name="ph:trash" size="16" /> Clear all
-        </button>
-      </div>
-    </div>
+          <button
+            v-if="list.length"
+            class="px-3 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50"
+            @click="clearAll"
+          >
+            Clear all
+          </button>
+        </div>
 
-    <div class="mt-6">
-      <div v-if="!list.length" class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-        <Icon name="ph:heart-break" size="48" class="mx-auto text-rose-400 opacity-80" />
-        <p class="mt-4 text-lg font-medium">No favorites yet</p>
-        <p class="mt-2 text-textSecondary">Save cities while browsing to see them here for easy access.</p>
-      </div>
+        <!-- Filter -->
+        <div class="mb-5">
+          <div class="relative">
+            <Icon name="ph:magnifying-glass-duotone"
+                  size="18"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" />
+            <input
+              v-model="q"
+              type="text"
+              placeholder="Filter by city or country…"
+              class="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-3 py-3 text-sm focus:outline-none"
+            />
+          </div>
+        </div>
 
-      <ul v-else class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <li v-for="c in list" :key="c.id" class="relative rounded-2xl border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                  <Icon name="ph:map-pin" size="18" class="text-primary" />
+        <!-- Empty -->
+        <div v-if="!filtered.length"
+             class="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center">
+          <div class="mx-auto h-10 w-10 rounded-full bg-rose-50 flex items-center justify-center mb-3">
+            <Icon name="ph:heart-duotone" size="18" class="text-rose-600" />
+          </div>
+          <p class="text-textPrimary font-medium">No favourites yet.</p>
+          <p class="text-textSecondary text-sm">Save a city from the dashboard using the heart button.</p>
+        </div>
+
+        <!-- List -->
+        <ul v-else class="space-y-3">
+          <li v-for="c in filtered" :key="c.id"
+              class="rounded-lg border border-gray-200 bg-white p-5 hover:shadow-sm transition">
+            <div class="flex items-center justify-between gap-4">
+              <!-- Left -->
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
+                  <h3 class="font-semibold text-textPrimary truncate">{{ c.city }}</h3>
+                  <span class="text-xs text-textSecondary px-2 py-0.5 rounded-md border">{{ c.country }}</span>
                 </div>
-                <div class="min-w-0">
-                  <div class="flex items-center gap-2">
-                    <h3 class="text-lg font-semibold truncate">{{ c.city }}</h3>
-                    <span class="text-xs text-textSecondary inline-flex items-center gap-1 px-2 py-0.5 rounded-md border">{{ c.country }}</span>
-                  </div>
-                  <p class="text-xs text-textSecondary mt-1 truncate">{{ c.lat ?? '—' }}, {{ c.lon ?? '—' }}</p>
-                </div>
+                <p class="text-xs text-textSecondary mt-1">
+                  {{ c.lat ?? '—' }}, {{ c.lon ?? '—' }} · added {{ timeAgo(c.addedAt) }}
+                </p>
+              </div>
+
+              <!-- Right (buttons with breathing room) -->
+              <div class="flex items-center gap-3 shrink-0">
+                <NuxtLink
+                  :to="`/?city=${encodeURIComponent(c.city)}`"
+                  class="inline-flex items-center gap-1 rounded-lg bg-primary text-white px-3 py-2 text-sm font-medium hover:opacity-95"
+                  title="Open on dashboard"
+                >
+                  <Icon name="ph:arrow-up-right" size="16" />
+                  Open
+                </NuxtLink>
+
+                <button
+                  class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-textPrimary hover:bg-gray-50"
+                  @click="remove(c.city, c.country)"
+                >
+                  Remove
+                </button>
               </div>
             </div>
-
-            <div class="flex items-center gap-2">
-              <NuxtLink :to="`/?city=${encodeURIComponent(c.city)}&unit=${unit}`" class="inline-flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-gray-50">
-                <Icon name="ph:arrow-right" size="14" /> Open
-              </NuxtLink>
-              <button @click="remove(c.city, c.country)" class="inline-flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-gray-50">
-                <Icon name="ph:trash" size="14" /> Remove
-              </button>
-            </div>
-          </div>
-          <div class="absolute top-3 right-3">
-            <button @click="toggle(c.city, c.country)" class="p-1 rounded-full bg-white/80 hover:bg-white">
-              <Icon :name="'ph:heart-fill'" size="16" class="text-rose-500" />
-            </button>
-          </div>
-        </li>
-      </ul>
-    </div>
+          </li>
+        </ul>
+      </div>
+    </main>
+    <AppFooter  />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useFavoritesStore } from '../../stores/favorites' // or '../../stores/favorites' if you prefer
+import AppHeader from '~/components/AppHeader.vue'
+import { useFavoritesStore } from '../../stores/favorites'
+
 const fav = useFavoritesStore()
 onMounted(() => fav.load())
 
-// show all items newest-first (already unshifted in store)
-const list = computed(() => fav.items)
-const remove = (city: string, country: string) => fav.remove(city, country)
-const clearAll = () => fav.clear?.() ?? (fav.items = [], fav['save']?.())
+const q = ref('')
 
-// unit to open with – keep it simple (you can add a toggle here if you want)
-const unit = ref<'metric' | 'imperial'>('metric')
+const list = computed(() => fav.items)
+const filtered = computed(() => {
+  const n = q.value.trim().toLowerCase()
+  if (!n) return list.value
+  return list.value.filter(i =>
+    i.city.toLowerCase().includes(n) || i.country.toLowerCase().includes(n)
+  )
+})
+
+const remove = (city: string, country: string) => fav.remove(city, country)
+
+function clearAll() {
+  if (!list.value.length) return
+  if (confirm('Remove all favourites?')) {
+    if (typeof (fav as any).clear === 'function') (fav as any).clear()
+    else { fav.items = []; (fav as any).save?.() }
+  }
+}
 
 function timeAgo(ts: number) {
   const s = Math.floor((Date.now() - ts) / 1000)
   if (s < 60) return `${s}s ago`
-  const m = Math.floor(s / 60)
-  if (m < 60) return `${m}m ago`
-  const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  const d = Math.floor(h / 24)
-  return `${d}d ago`
+  const m = Math.floor(s / 60); if (m < 60) return `${m}m ago`
+  const h = Math.floor(m / 60); if (h < 24) return `${h}h ago`
+  const d = Math.floor(h / 24); return `${d}d ago`
 }
 </script>
