@@ -32,7 +32,40 @@
         </div>
 
        
+        <section class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
+          <!-- Header row -->
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-2">
+              <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
+              <h2 class="text-lg sm:text-xl font-semibold text-textPrimary">Ghent</h2>
+            </div>
 
+
+          </div>
+
+          <!-- Primary reading -->
+          <div class="mt-4 flex items-end gap-4">
+            <div class="flex-1">
+              <p class="text-textSecondary text-xs uppercase tracking-wide">Current temperature</p>
+              <p class="text-4xl sm:text-5xl font-semibold leading-tight">
+                <span v-show="unit==='C'">13.0°C</span>
+                <span v-show="unit==='F'">55.4°F</span>
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-sm text-textSecondary">
+              <div class="inline-flex items-center gap-1 rounded-full border border-gray-200 px-2.5 py-1">
+                <Icon name="ph:thermometer-simple-duotone" size="16" />
+                <span v-show="unit==='C'">Feels like 12.5°C</span>
+                <span v-show="unit==='F'">Feels like 54.5°F</span>
+              </div>
+              <div class="inline-flex items-center gap-1 rounded-full border border-gray-200 px-2.5 py-1">
+                <Icon name="ph:waves-duotone" size="16" /> Humidity 62%
+              </div>
+            </div>
+          </div>
+
+
+        </section>
       </div>
     </main>
   </div>
