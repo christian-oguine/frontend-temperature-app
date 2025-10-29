@@ -201,6 +201,8 @@
         </section>
       </div>
     </main>
+
+    <AppFooter  />
   </div>
 </template>
 
@@ -208,6 +210,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useFavoritesStore } from '../../stores/favorites'    
 import AppHeader from '~/components/AppHeader.vue'            
+import AppFooter from '~/components/AppFooter.vue'
 
 /** UI state */
 const cityInput = ref('Ghent')
