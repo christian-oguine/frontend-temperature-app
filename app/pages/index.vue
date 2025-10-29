@@ -196,7 +196,8 @@
 
           <p v-if="pending" class="mt-4 text-sm text-textSecondary">Loading…</p>
           <p v-if="error" class="mt-4 text-sm text-red-600">
-            Error: {{ error?.statusMessage || error?.message || 'Request failed' }}
+            <!--Error: {{ error?.statusMessage || error?.message || 'Request failed' }} -->
+            Error: {{ 'City name is probably misspelled or not found' }}
           </p>
         </section>
       </div>
