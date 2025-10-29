@@ -20,11 +20,11 @@
             <input
               type="text"
               value="Ghent"
-        
+              
               class="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-3 py-3 text-sm focus:outline-none"
             />
           </div>
-          <button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-5 py-3 text-sm font-medium cursor-default">
+          <button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-5 py-3 text-sm font-medium">
             <Icon name="ph:magnifying-glass-duotone" size="18" />
             Search
           </button>
@@ -34,20 +34,29 @@
         <section class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
           <!-- Header row -->
           <div class="flex items-start justify-between gap-4">
-            <div class="flex items-center gap-2">
-              <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
-              <h2 class="text-lg sm:text-xl font-semibold text-textPrimary">Ghent</h2>
-                <span class="text-textSecondary text-sm">BE</span>
+            <!-- Left: location block -->
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
+                <h2 class="text-lg sm:text-xl font-semibold text-textPrimary truncate">Ghent</h2>
+                <span class="text-textSecondary text-xs sm:text-sm inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-gray-200">
+                  BE
+                </span>
+              </div>
+              <!-- coordinates + tz as a subtle second line -->
+              <div class="mt-1 flex items-center gap-2 text-xs sm:text-sm text-textSecondary">
+                <Icon name="ph:map-trifold-duotone" size="14" class="opacity-70" />
+                <span>51.05, 3.73</span>
+              </div>
             </div>
 
+            <!-- Right: unit toggle + fav + icon -->
             <div class="flex items-center gap-2">
-              <!-- Unit toggle -->
               <div class="rounded-xl border border-gray-200 overflow-hidden flex">
                 <button type="button" class="px-3 py-1 text-sm" :class="unit==='C' ? 'bg-primary text-white' : 'text-textSecondary'" @click="unit='C'">°C</button>
                 <button type="button" class="px-3 py-1 text-sm" :class="unit==='F' ? 'bg-primary text-white' : 'text-textSecondary'" @click="unit='F'">°F</button>
               </div>
 
-              <!-- Favorite -->
               <button
                 type="button"
                 class="rounded-full p-2 border border-gray-200 hover:bg-gray-50"
@@ -128,11 +137,7 @@
                 <p>17:21 (TZ +2)</p>
               </div>
 
-              <!-- Coordinates -->
-              <div class="rounded-xl border border-gray-200 p-3">
-                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Coordinates</p>
-                <p>51.05, 3.73</p>
-              </div>
+              <!-- (Coordinates card removed) -->
             </div>
 
             <!-- WIND -->
@@ -186,6 +191,7 @@
 import { ref } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 
+// UI-only state. All displayed numbers are hardcoded in the template.
 const unit = ref<'C' | 'F'>('C')
 const faved = ref(false)
 const tab = ref<'overview' | 'wind' | 'atmo'>('overview')
