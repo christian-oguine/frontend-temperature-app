@@ -50,13 +50,14 @@
                 </h2>
                 <span
                   class="text-textSecondary text-xs sm:text-sm inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-gray-200">
-                  {{ data?.country || '—' }}
+                  {{ data?.country || '—' }}   
                 </span>
+                <img v-if="data?.weather?.icon" :src="data.weather.icon" alt="weather" class="h-8 w-8" />
               </div>
               <!-- coordinates -->
               <div class="mt-1 flex items-center gap-2 text-xs sm:text-sm text-textSecondary">
                 <Icon name="ph:map-trifold-duotone" size="14" class="opacity-70" />
-                <span>{{ data?.coordinates?.lat ?? '—' }}, {{ data?.coordinates?.lon ?? '—' }}</span>
+                <span class="ml-2">{{ data?.coordinates?.lat ?? '—' }}, {{ data?.coordinates?.lon ?? '—' }}</span>
               </div>
             </div>
 
@@ -78,7 +79,6 @@
                 <Icon name="ph:heart-duotone" size="18" />
               </button>
 
-              <img v-if="data?.weather?.icon" :src="data.weather.icon" alt="weather" class="h-8 w-8" />
             </div>
           </div>
 
