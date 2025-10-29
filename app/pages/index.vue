@@ -64,7 +64,66 @@
             </div>
           </div>
 
+          <!-- Details grid -->
+          <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <!-- Low / High -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Today</p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-textSecondary text-xs">Low</p>
+                  <p class="font-medium">
+                    <span v-show="unit==='C'">8.0°C</span>
+                    <span v-show="unit==='F'">46.4°F</span>
+                  </p>
+                </div>
+                <div class="h-10 w-px bg-gray-200"></div>
+                <div>
+                  <p class="text-textSecondary text-xs">High</p>
+                  <p class="font-medium">
+                    <span v-show="unit==='C'">13.0°C</span>
+                    <span v-show="unit==='F'">55.4°F</span>
+                  </p>
+                </div>
+              </div>
+            </div>
 
+            <!-- Wind -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Wind</p>
+              <p>18 km/h • 230° • gust 8.1 m/s</p>
+            </div>
+
+            <!-- Pressure -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Pressure / Clouds</p>
+              <p>1016 hPa • 48%</p>
+            </div>
+
+            <!-- Visibility -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Visibility</p>
+              <p>9000 m</p>
+            </div>
+
+            <!-- Sunrise -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Sunrise</p>
+              <p>07:23 (TZ +2)</p>
+            </div>
+
+            <!-- Sunset -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Sunset</p>
+              <p>17:21 (TZ +2)</p>
+            </div>
+
+            <!-- Coords -->
+            <div class="rounded-xl border border-gray-200 p-3">
+              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Coordinates</p>
+              <p>51.05, 3.73</p>
+            </div>
+          </div>
         </section>
       </div>
     </main>
