@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
 
-type Unit = 'metric' | 'imperial'
-
 export interface FavoriteCity {
-  id: string           
+  id: string
   city: string
   country: string
   lat?: number
@@ -12,10 +10,8 @@ export interface FavoriteCity {
 }
 
 const KEY = 'weather:favorites'
-
-function makeId(city: string, country: string) {
-  return `${city.trim().toLowerCase()}|${country.trim().toLowerCase()}`
-}
+const makeId = (city: string, country: string) =>
+  `${city.trim().toLowerCase()}|${country.trim().toLowerCase()}`
 
 export const useFavoritesStore = defineStore('favorites', {
   state: () => ({
@@ -24,10 +20,8 @@ export const useFavoritesStore = defineStore('favorites', {
   }),
 
   getters: {
-    // quick check if a city is favorited
     has: (s) => (city: string, country: string) =>
       s.items.some(i => i.id === makeId(city, country)),
-
     count: (s) => s.items.length,
   },
 
@@ -41,7 +35,6 @@ export const useFavoritesStore = defineStore('favorites', {
     save() {
       localStorage.setItem(KEY, JSON.stringify(this.items))
     },
-
     add(payload: { city: string; country: string; lat?: number; lon?: number }) {
       const id = makeId(payload.city, payload.country)
       if (this.items.some(i => i.id === id)) return
@@ -55,13 +48,11 @@ export const useFavoritesStore = defineStore('favorites', {
       })
       this.save()
     },
-
     remove(city: string, country: string) {
       const id = makeId(city, country)
       this.items = this.items.filter(i => i.id !== id)
       this.save()
     },
-
     toggle(payload: { city: string; country: string; lat?: number; lon?: number }) {
       if (this.has(payload.city, payload.country)) {
         this.remove(payload.city, payload.country)

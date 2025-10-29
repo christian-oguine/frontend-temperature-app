@@ -72,12 +72,20 @@
                         @click="setUnit('imperial')">°F</button>
               </div>
 
-              <button type="button"
-                      class="rounded-full p-2 border border-gray-200 hover:bg-gray-50"
-                      :class="faved ? 'text-rose-600' : 'text-textSecondary'"
-                      @click="faved=!faved" aria-label="Add to favorites" title="Add to favorites">
+        
+              <button
+                type="button"
+                class="rounded-full p-2 border border-gray-200 hover:bg-gray-50"
+                :class="isFaved ? 'text-rose-600' : 'text-textSecondary'"
+                @click="toggleFavorite"
+                :title="isFaved ? 'Remove from favourites' : 'Add to favourites'"
+                aria-label="Toggle favourite"
+              >
                 <Icon name="ph:heart-duotone" size="18" />
               </button>
+
+
+                <!-- favorite button -->
 
             </div>
           </div>
@@ -198,12 +206,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import AppHeader from '../components/AppHeader.vue'
+import { useFavoritesStore } from '../../stores/favorites'    
+import AppHeader from '~/components/AppHeader.vue'            
 
 /** UI state */
-const cityInput = ref('Ghent')                               
+const cityInput = ref('Ghent')
 const unit = ref<'metric' | 'imperial'>('metric')
-const faved = ref(false)
 const tab = ref<'overview' | 'wind' | 'atmo'>('overview')
 
 /** Data state */
@@ -211,18 +219,23 @@ const data = ref<any>(null)
 const error = ref<any>(null)
 const pending = ref(false)
 
+/** Favorites store */
+const fav = useFavoritesStore()
+
+/** Display helpers */
 const unitLabel = computed(() => (unit.value === 'metric' ? 'C' : 'F'))
 const fmt = (n: unknown) => (typeof n === 'number' ? n.toFixed(1) : '—')
 
-
+/** Fetch weather by current input + unit */
 async function fetchWeather() {
-  const city = (cityInput.value || '').trim() || 'Ghent'     
+  const city = (cityInput.value || '').trim() || 'Ghent'
   pending.value = true
   error.value = null
   try {
-    data.value = await $fetch('http://localhost:5000/api/weather', {
+    const res = await $fetch('http://localhost:5000/api/weather', {
       query: { city, unit: unit.value }
     })
+    data.value = res
   } catch (e: any) {
     error.value = e
     data.value = null
@@ -231,12 +244,35 @@ async function fetchWeather() {
   }
 }
 
-/** Change unit and refetch for current city */
+/** Toggle unit and refetch */
 async function setUnit(newUnit: 'metric' | 'imperial') {
   if (unit.value === newUnit) return
   unit.value = newUnit
   await fetchWeather()
 }
 
-onMounted(fetchWeather)
+/** Favourite state for current result */
+const isFaved = computed(() => {
+  const c = data.value?.city
+  const cc = data.value?.country
+  return c && cc ? fav.has(c, cc) : false
+})
+
+/** Favourite click handler */
+function toggleFavorite() {
+  const r = data.value
+  if (!r?.city || !r?.country) return
+  fav.toggle({
+    city: r.city,
+    country: r.country,
+    lat: r.coordinates?.lat,
+    lon: r.coordinates?.lon
+  })
+}
+
+/** Init */
+onMounted(() => {
+  fav.load()         
+  fetchWeather()    
+})
 </script>
