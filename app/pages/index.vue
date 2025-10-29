@@ -40,7 +40,40 @@
               <h2 class="text-lg sm:text-xl font-semibold text-textPrimary">Ghent</h2>
             </div>
 
+            <div class="flex items-center gap-2">
+              <!-- Unit toggle -->
+              <div class="rounded-xl border border-gray-200 overflow-hidden flex">
+                <button
+                  type="button"
+                  class="px-3 py-1 text-sm"
+                  :class="unit==='C' ? 'bg-primary text-white' : 'text-textSecondary'"
+                  @click="unit='C'"
+                  aria-label="Show Celsius"
+                >°C</button>
+                <button
+                  type="button"
+                  class="px-3 py-1 text-sm"
+                  :class="unit==='F' ? 'bg-primary text-white' : 'text-textSecondary'"
+                  @click="unit='F'"
+                  aria-label="Show Fahrenheit"
+                >°F</button>
+              </div>
 
+              <!-- Favorite -->
+              <button
+                type="button"
+                class="rounded-full p-2 border border-gray-200 hover:bg-gray-50"
+                :class="faved ? 'text-rose-600' : 'text-textSecondary'"
+                @click="faved=!faved"
+                aria-label="Add to favorites"
+                title="Add to favorites"
+              >
+                <Icon name="ph:heart-duotone" size="18" />
+              </button>
+
+              <!-- Weather icon -->
+              <img src="https://openweathermap.org/img/wn/04d@2x.png" alt="weather" class="h-8 w-8" />
+            </div>
           </div>
 
           <!-- Primary reading -->
