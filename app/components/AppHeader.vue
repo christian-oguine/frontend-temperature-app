@@ -48,8 +48,8 @@ import { ref } from 'vue'
 
 const favoritesCount = ref(3)
 const navItems = [
-  { label: 'Dashboard', to: '/dashboard', icon: 'ph:speedometer-duotone' },
-  { label: 'History', to: '/history', icon: 'ph:clock-counter-clockwise-duotone' }
+  { label: 'Dashboard', to: '/', icon: 'ph:speedometer-duotone' },
+  { label: 'History', to: '/', icon: 'ph:clock-counter-clockwise-duotone' }
 ]
 
 function onFavoritesClick() { alert('Open Favorites') }
