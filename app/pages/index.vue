@@ -209,8 +209,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useFavoritesStore } from '../../stores/favorites'    
-import AppHeader from '~/components/AppHeader.vue'            
+import { useFavoritesStore } from '../../stores/favorites'
+import { useHistoryStore } from '../../stores/history'   // ✅ added
+import AppHeader from '~/components/AppHeader.vue'
 import AppFooter from '~/components/AppFooter.vue'
 
 /** UI state */
@@ -223,8 +224,9 @@ const data = ref<any>(null)
 const error = ref<any>(null)
 const pending = ref(false)
 
-/** Favorites store */
+/** Stores */
 const fav = useFavoritesStore()
+const history = useHistoryStore() // ✅ added
 
 /** Display helpers */
 const unitLabel = computed(() => (unit.value === 'metric' ? 'C' : 'F'))
@@ -239,7 +241,17 @@ async function fetchWeather() {
     const res = await $fetch('http://localhost:5000/api/weather', {
       query: { city, unit: unit.value }
     })
+
+    // ✅ Set the response data
     data.value = res
+
+    // ✅ Add current search to history
+    history.add({
+      city: res.city,
+      country: res.country,
+      temp: res.temperature.current,
+      unit: unit.value
+    })
   } catch (e: any) {
     error.value = e
     data.value = null
@@ -255,14 +267,14 @@ async function setUnit(newUnit: 'metric' | 'imperial') {
   await fetchWeather()
 }
 
-/** Favourite state for current result */
+/** Favorite state for current result */
 const isFaved = computed(() => {
   const c = data.value?.city
   const cc = data.value?.country
   return c && cc ? fav.has(c, cc) : false
 })
 
-/** Favourite click handler */
+/** Favorite click handler */
 function toggleFavorite() {
   const r = data.value
   if (!r?.city || !r?.country) return
@@ -276,7 +288,8 @@ function toggleFavorite() {
 
 /** Init */
 onMounted(() => {
-  fav.load()         
-  fetchWeather()    
+  fav.load()
+  history.load()     // ✅ ensure previously saved searches are loaded
+  fetchWeather()
 })
 </script>
