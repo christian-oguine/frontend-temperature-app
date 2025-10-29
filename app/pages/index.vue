@@ -13,15 +13,14 @@
           <p class="text-textSecondary mt-1 text-sm">Enter a city name to check the temperature.</p>
         </div>
 
-        <!-- Search  -->
+        <!-- Search (visual only) -->
         <div class="mx-auto grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-3 bg-white border border-gray-200 rounded-2xl p-3 shadow-sm">
           <div class="relative">
             <Icon name="ph:map-pin-duotone" size="20" class="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" />
             <input
               type="text"
               value="Ghent"
-              readonly
-              placeholder="Enter a city (e.g., Brussels)"
+        
               class="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-3 py-3 text-sm focus:outline-none"
             />
           </div>
@@ -31,32 +30,21 @@
           </button>
         </div>
 
-       
+        <!-- Card -->
         <section class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm">
           <!-- Header row -->
           <div class="flex items-start justify-between gap-4">
             <div class="flex items-center gap-2">
               <Icon name="ph:map-pin-duotone" size="18" class="text-primary" />
               <h2 class="text-lg sm:text-xl font-semibold text-textPrimary">Ghent</h2>
+                <span class="text-textSecondary text-sm">BE</span>
             </div>
 
             <div class="flex items-center gap-2">
               <!-- Unit toggle -->
               <div class="rounded-xl border border-gray-200 overflow-hidden flex">
-                <button
-                  type="button"
-                  class="px-3 py-1 text-sm"
-                  :class="unit==='C' ? 'bg-primary text-white' : 'text-textSecondary'"
-                  @click="unit='C'"
-                  aria-label="Show Celsius"
-                >°C</button>
-                <button
-                  type="button"
-                  class="px-3 py-1 text-sm"
-                  :class="unit==='F' ? 'bg-primary text-white' : 'text-textSecondary'"
-                  @click="unit='F'"
-                  aria-label="Show Fahrenheit"
-                >°F</button>
+                <button type="button" class="px-3 py-1 text-sm" :class="unit==='C' ? 'bg-primary text-white' : 'text-textSecondary'" @click="unit='C'">°C</button>
+                <button type="button" class="px-3 py-1 text-sm" :class="unit==='F' ? 'bg-primary text-white' : 'text-textSecondary'" @click="unit='F'">°F</button>
               </div>
 
               <!-- Favorite -->
@@ -71,7 +59,6 @@
                 <Icon name="ph:heart-duotone" size="18" />
               </button>
 
-              <!-- Weather icon -->
               <img src="https://openweathermap.org/img/wn/04d@2x.png" alt="weather" class="h-8 w-8" />
             </div>
           </div>
@@ -97,64 +84,96 @@
             </div>
           </div>
 
-          <!-- Details grid -->
-          <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-            <!-- Low / High -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Today</p>
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-textSecondary text-xs">Low</p>
-                  <p class="font-medium">
-                    <span v-show="unit==='C'">8.0°C</span>
-                    <span v-show="unit==='F'">46.4°F</span>
-                  </p>
+          <!-- Tabs -->
+          <div class="mt-6">
+            <div class="inline-flex rounded-xl border border-gray-200 overflow-hidden">
+              <button class="px-4 py-2 text-sm" :class="tab==='overview' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'" @click="tab='overview'">Overview</button>
+              <button class="px-4 py-2 text-sm" :class="tab==='wind' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'" @click="tab='wind'">Wind</button>
+              <button class="px-4 py-2 text-sm" :class="tab==='atmo' ? 'bg-gray-100 text-textPrimary' : 'text-textSecondary'" @click="tab='atmo'">Atmosphere</button>
+            </div>
+
+            <!-- OVERVIEW -->
+            <div v-show="tab==='overview'" class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <!-- Low / High -->
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-2">Today</p>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-textSecondary text-xs">Low</p>
+                    <p class="font-medium">
+                      <span v-show="unit==='C'">8.0°C</span>
+                      <span v-show="unit==='F'">46.4°F</span>
+                    </p>
+                  </div>
+                  <div class="h-10 w-px bg-gray-200"></div>
+                  <div>
+                    <p class="text-textSecondary text-xs">High</p>
+                    <p class="font-medium">
+                      <span v-show="unit==='C'">13.0°C</span>
+                      <span v-show="unit==='F'">55.4°F</span>
+                    </p>
+                  </div>
                 </div>
-                <div class="h-10 w-px bg-gray-200"></div>
-                <div>
-                  <p class="text-textSecondary text-xs">High</p>
-                  <p class="font-medium">
-                    <span v-show="unit==='C'">13.0°C</span>
-                    <span v-show="unit==='F'">55.4°F</span>
-                  </p>
-                </div>
+              </div>
+
+              <!-- Sunrise -->
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Sunrise</p>
+                <p>07:23 (TZ +2)</p>
+              </div>
+
+              <!-- Sunset -->
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Sunset</p>
+                <p>17:21 (TZ +2)</p>
+              </div>
+
+              <!-- Coordinates -->
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Coordinates</p>
+                <p>51.05, 3.73</p>
               </div>
             </div>
 
-            <!-- Wind -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Wind</p>
-              <p>18 km/h • 230° • gust 8.1 m/s</p>
+            <!-- WIND -->
+            <div v-show="tab==='wind'" class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Speed</p>
+                <p>18 km/h</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Direction</p>
+                <div class="flex items-center gap-2">
+                  <div class="h-4 w-4 border border-gray-300 rounded-full flex items-center justify-center">
+                    <Icon name="ph:arrow-up" size="12" style="transform: rotate(230deg);" />
+                  </div>
+                  <p>230°</p>
+                </div>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Gust</p>
+                <p>8.1 m/s</p>
+              </div>
             </div>
 
-            <!-- Pressure -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Pressure / Clouds</p>
-              <p>1016 hPa • 48%</p>
-            </div>
-
-            <!-- Visibility -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Visibility</p>
-              <p>9000 m</p>
-            </div>
-
-            <!-- Sunrise -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Sunrise</p>
-              <p>07:23 (TZ +2)</p>
-            </div>
-
-            <!-- Sunset -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Sunset</p>
-              <p>17:21 (TZ +2)</p>
-            </div>
-
-            <!-- Coords -->
-            <div class="rounded-xl border border-gray-200 p-3">
-              <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Coordinates</p>
-              <p>51.05, 3.73</p>
+            <!-- ATMOSPHERE -->
+            <div v-show="tab==='atmo'" class="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Pressure</p>
+                <p>1016 hPa</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Humidity</p>
+                <p>62%</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Clouds</p>
+                <p>48%</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-3">
+                <p class="uppercase text-xs tracking-wide text-textSecondary mb-1">Visibility</p>
+                <p>9000 m</p>
+              </div>
             </div>
           </div>
         </section>
@@ -167,7 +186,7 @@
 import { ref } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 
-// UI state only (values are hardcoded in the template)
 const unit = ref<'C' | 'F'>('C')
 const faved = ref(false)
+const tab = ref<'overview' | 'wind' | 'atmo'>('overview')
 </script>
